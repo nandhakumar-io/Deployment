@@ -1,0 +1,8 @@
+tunnel: 3965f101-4e5d-49e8-88eb-2af94a910c1f
+credentials-file: /etc/cloudflared/3965f101-4e5d-49e8-88eb-2af94a910c1f.json
+
+ingress:
+  - hostname: "*.notoriousdev.in" #wildcard includes all subdomains , make sure that the cname record in your dns provider also have wildcard dns for the tunnel
+    service: http://traefik:80 
+
+  - service: http_status:404

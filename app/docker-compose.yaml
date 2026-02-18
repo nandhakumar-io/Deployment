@@ -1,0 +1,43 @@
+services:  
+  app1:
+      build: .
+      networks:
+        - proxy
+      environment:
+        APP_NAME: app1
+      expose:
+        - "3000"
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.app.rule=Host(`app.notoriousdev.in`)"
+        - "traefik.http.routers.app.service=myapp"
+        - "traefik.http.services.myapp.loadbalancer.server.port=3000"
+      healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:3000"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+      restart: always
+    
+
+  app2:
+      build: .
+      networks:
+        - proxy
+      environment:
+        APP_NAME: app2
+      expose:
+        - "3000"
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.services.myapp.loadbalancer.server.port=3000"
+      healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:3000"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+      restart: always
+  
+networks:
+  proxy:
+    external: true
